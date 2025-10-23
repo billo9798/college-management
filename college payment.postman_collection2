@@ -1,0 +1,257 @@
+{
+	"info": {
+		"_postman_id": "e66a2454-de37-4e52-9844-45614cb2f358",
+		"name": "college payment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "26081896"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8080/api/users/register",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "username",
+							"value": "rahul",
+							"type": "text"
+						},
+						{
+							"key": "fullName",
+							"value": "Rahul Kumar",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "billo@123",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "rahul@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "rollNumber",
+							"value": "1234567892",
+							"type": "text"
+						},
+						{
+							"key": "files",
+							"type": "file",
+							"src": "/C:/Users/Billo/Pictures/Screenshots/Screenshot 2025-08-19 111413.png"
+						}
+					]
+				},
+				"url": "http://localhost:8080/api/users/register"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/api/users/login?username=billo&password=billo@123",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/users/login?username=billo&password=billo@123",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"login"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "billo"
+						},
+						{
+							"key": "password",
+							"value": "billo@123"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/api/issues/create",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiaWxsbyIsImlhdCI6MTc1ODc4MjUzMSwiZXhwIjoxNzU4Nzg2MTMxfQ.Wr-mqsX33O9pe12GSw7nYx1Da-pix87Y0OVu64MXMDw"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "content",
+							"value": "test issue messgae",
+							"type": "text"
+						},
+						{
+							"key": "issueId",
+							"value": "6",
+							"type": "text"
+						}
+					]
+				},
+				"url": "http://localhost:8080/api/comment/create"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/api/users/1/status?active=false",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiaWxsbyIsImlhdCI6MTc1NzMxMjM4OSwiZXhwIjoxNzU3MzE1OTg5fQ.rO85ivVLe77ZFCyKvVhdSmgk85-eBRaWHwjeiTgik0g"
+					}
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/users/1/status?active=false",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"users",
+						"1",
+						"status"
+					],
+					"query": [
+						{
+							"key": "active",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/api/issues/6/status?status=IN_PROGRESS",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiaWxsbyIsImlhdCI6MTc1NzQ4NzgyNywiZXhwIjoxNzU3NDkxNDI3fQ.9L4ySHAlikB4Poax__On6J_LdE_CQdEEIioKfAe-7G4"
+					}
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/issues/6/status?status=IN_PROGRESS",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"issues",
+						"6",
+						"status"
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "IN_PROGRESS"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/api/issues/my",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiaWxsbyIsImlhdCI6MTc1NzQ4NzgyNywiZXhwIjoxNzU3NDkxNDI3fQ.9L4ySHAlikB4Poax__On6J_LdE_CQdEEIioKfAe-7G4"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:8080/api/issues/my"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/api/issues/6",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiaWxsbyIsImlhdCI6MTc1NzQ4NzgyNywiZXhwIjoxNzU3NDkxNDI3fQ.9L4ySHAlikB4Poax__On6J_LdE_CQdEEIioKfAe-7G4"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:8080/api/issues/list"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/api/users/list",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiaWxsbyIsImlhdCI6MTc1NzM5NzYyNiwiZXhwIjoxNzU3NDAxMjI2fQ.RMTFFt1rDFhhYaNLtXn9wq9WEBJPkQgYVS27Tug3XX0"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:8080/api/users/list"
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/api/issues/global",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiaWxsbyIsImlhdCI6MTc1ODc4MDA3NiwiZXhwIjoxNzU4NzgzNjc2fQ.YLlI9_uznp6uSU6SyM1eFBpTKCqdfKKpTDwSIY-9-m8"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:8080/api/issues/global"
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
