@@ -6,19 +6,33 @@ import signupImg from "../../asset/img/Employee-Welcome.jpg";
 export default function Signup() {
     const navigate = useNavigate();
     const [fullName, setFullName] = useState("");
+    const [userName, setUserName] = useState("");
     const [email, setEmail] = useState("");
-    const [studentId, setStudentId] = useState("");
+    const [idfile, setIdFile] = useState(null);
     const [rollNumber, setRollNumber] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
+        const formData = new FormData();
+        formData.append("username", userName);
+        formData.append("fullName", fullName);
+        formData.append("email", email);
+        formData.append("rollNumber", rollNumber);
+        formData.append("password", password);
+        formData.append("files", idfile);
+
         try {
-            await api.post("/register", { fullName, email, studentId, rollNumber, password });
+            await api.post("/users/register", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
             navigate("/login");
         } catch (err) {
-            setError("Signup failed. Try again.");
+            setError("Signup failed. " + err.response.data + " Try again.");
         }
     };
 
@@ -91,9 +105,9 @@ export default function Signup() {
                         />
                         <input
                             type="text"
-                            placeholder="Student ID"
-                            value={studentId}
-                            onChange={(e) => setStudentId(e.target.value)}
+                            placeholder="User Name"
+                            value={userName}
+                            onChange={(e) => setUserName(e.target.value)}
                             required
                             style={{
                                 padding: "12px",
@@ -120,6 +134,28 @@ export default function Signup() {
                             placeholder="Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            required
+                            style={{
+                                padding: "12px",
+                                borderRadius: "8px",
+                                border: "1px solid #ccc",
+                                fontSize: "16px"
+                            }}
+                        />
+                        <label
+                            htmlFor="fileInput"
+                            style={{
+                                display: "block",
+                                fontWeight: "bold",
+                                margin: "0px 10px",
+                            }}
+                        >
+                            Upload Student Id card <span style={{ color: 'red' }}>*</span>
+                        </label>
+                        <input
+                            type="file"
+                            multiple
+                            onChange={(e) => setIdFile(e.target.files[0])}
                             required
                             style={{
                                 padding: "12px",

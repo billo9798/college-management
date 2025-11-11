@@ -12,8 +12,8 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await api.post("/login", { email, password });
-      navigate("/dashboard");
+      await api.post(`/users/login?username=${email}&password=${password}`);
+      navigate("/home");
     } catch (err) {
       setError("Login failed. Please check your email or password.");
     }
@@ -88,8 +88,8 @@ export default function LoginPage() {
             style={{ display: "flex", flexDirection: "column", gap: "15px" }}
           >
             <input
-              type="email"
-              placeholder="Email"
+              type="text"
+              placeholder="Enter User Name"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
