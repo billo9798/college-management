@@ -19,6 +19,8 @@ import LoginPage from "./component/pages/Login";
 import Signup from "./component/pages/Signup";
 import IssuePage from "./component/Issues/IssuePage";
 import AddIssue from "./component/Issues/AddIssue";
+import ContactUs from "./component/common/ContactUs";
+import AboutUs from "./component/common/AboutUs";
 
 function AppContent() {
     const location = useLocation();
@@ -38,6 +40,8 @@ function AppContent() {
                 <Route exact path="/add-students" element={<AddStudent />} />
                 <Route exact path="/edit-student/:id" element={<EditStudent />} />
                 <Route exact path="/student-profile/:id" element={<StudentPofile />} />
+                <Route exact path="/contact" element={<ContactUs />} />
+                <Route exact path="/about" element={<AboutUs />} />
             </Routes>
         </main>
     );

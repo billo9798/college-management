@@ -12,8 +12,24 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await api.post(`/users/login?username=${email}&password=${password}`);
-      navigate("/home");
+      setError("");
+
+      try {
+        const response = await api.post(
+          `/users/login?username=${email}&password=${password}`
+        );
+        const token = response.data.token;
+
+        if (token) {
+          localStorage.setItem("token", token);
+          navigate("/home");
+        } else {
+          setError("Invalid login response — no token found.");
+        }
+      } catch (err) {
+        console.error("Login error:", err);
+        setError("Invalid username or password.");
+      }
     } catch (err) {
       setError("Login failed. Please check your email or password.");
     }

@@ -32,13 +32,14 @@ public class IssueController {
             @RequestParam String description,
             @RequestParam IssuePriority priority,
             @RequestParam Long issueTypeId,
+            @RequestParam Boolean globalIssue,
             @RequestParam Department assignedToDepartment,
             @RequestParam(required = false) MultipartFile[] files) throws IOException {
 
         if (currentUser.getRole() != Role.STUDENT) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        IssueDTO saved = issueService.createIssue(currentUser.getId(), title, description, priority, issueTypeId, assignedToDepartment, files);
+        IssueDTO saved = issueService.createIssue(currentUser.getId(), title, description, priority, issueTypeId, assignedToDepartment, globalIssue, files);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 

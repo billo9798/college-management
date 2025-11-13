@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../asset/img/Logo_of_College_of_Commerce,_Arts_and_Science.png";
 import "./NavBar.css";
 
 const NavBar = () => {
   const [scrolled, setScrolled] = useState(false);
-
+  const navigate = useNavigate();
   // Detect scroll to change navbar background
   useEffect(() => {
     const handleScroll = () => {
@@ -19,15 +19,22 @@ const NavBar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    sessionStorage.clear();
+    navigate("/login");
+  };
+
   return (
     <nav
-      className={`navbar fixed-top navbar-expand-lg navbar-dark ${
-        scrolled ? "scrolled-navbar" : "custom-navbar"
-      }`}
+      className={`navbar fixed-top navbar-expand-lg navbar-dark ${scrolled ? "scrolled-navbar" : "custom-navbar"
+        }`}
     >
       <div className="container-fluid">
         <Link className="navbar-brand d-flex align-items-center" to="/">
-		  <img src={Logo} alt="College Logo" height="40" className="me-2" />
+          <img src={Logo} alt="College Logo" height="40" className="me-2" />
           <span className="ms-2">IMS</span>
         </Link>
 
@@ -45,12 +52,12 @@ const NavBar = () => {
         {/* Menu Section */}
         <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
           <ul className="navbar-nav">
-			<li className="nav-item">
+            <li className="nav-item">
               <Link className="nav-link" to="/home">
                 Home
               </Link>
             </li>
-			
+
             {/* Dropdown Menu */}
             <li className="nav-item dropdown custom-dropdown">
               <span className="nav-link dropdown-toggle" role="button">
@@ -70,7 +77,7 @@ const NavBar = () => {
               </ul>
             </li>
 
-			 <li className="nav-item dropdown custom-dropdown">
+            <li className="nav-item dropdown custom-dropdown">
               <span className="nav-link dropdown-toggle" role="button">
                 Student
               </span>
@@ -87,20 +94,20 @@ const NavBar = () => {
                 </li>
               </ul>
             </li>
-			<li className="nav-item">
+            <li className="nav-item">
               <Link className="nav-link" to="/contact">
-                Notifications
+                contect us
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/contact">
+              <Link className="nav-link" to="/about">
                 About us
               </Link>
             </li>
-			<li className="nav-item">
-              <Link className="nav-link" to="/contact">
+            <li className="nav-item">
+              <button className="nav-link btn btn-link" onClick={handleLogout}>
                 Logout
-              </Link>
+              </button>
             </li>
           </ul>
         </div>

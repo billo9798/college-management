@@ -1,26 +1,64 @@
-import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import api from "../../api";
 
 export default function IssuePage() {
+    const navigate = useNavigate();
     const [form, setForm] = useState({
         title: "",
-        type: "",
+        description: "",
+        priority: "LOW",
         department: "",
-        category: ""
+        issueType: -1,
+        files: null
     });
+    const [issueTypes, setIssueTypes] = useState([]);
+    useEffect(() => {
+        const fetchIssueTypes = async () => {
+            try {
+                const response = await api.get("/issue-types", {
+                    withCredentials: true,
+                });
+                setIssueTypes(response.data);
+            } catch (error) {
+                console.error("Error fetching issue types:", error);
+            }
+        };
+
+        fetchIssueTypes();
+    }, []);
 
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const issueType = queryParams.get("type") === "global" ? "Global Issue" : "My Issue";
 
-
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        alert("Issue Submitted: " + JSON.stringify(form, null, 2));
+        console.log(form, 'form')
+        const formData = new FormData();
+        formData.append("title", form.title);
+        formData.append("description", form.description);
+        formData.append("priority", form.priority);
+        formData.append("issueTypeId", form.issueType);
+        formData.append("globalIssue", queryParams.get("type") === "global" ? true : false);
+        formData.append("assignedToDepartment", form.department);
+        formData.append("files", form.files);
+
+        try {
+            await api.post("/issues/create", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+                withCredentials: true,
+            });
+            navigate("/home");
+        } catch (err) {
+            alert("Signup failed. " + err.response.data + " Try again.");
+        }
     };
 
     return (
@@ -43,16 +81,18 @@ export default function IssuePage() {
                     <div style={styles.formGroup}>
                         <label style={styles.label}>Issue Type</label>
                         <select
-                            name="type"
-                            value={form.type}
+                            name="issueType"
+                            value={form.issueType}
                             onChange={handleChange}
                             style={styles.select}
                             required
                         >
-                            <option value="">Select Type</option>
-                            <option value="Bug">Bug</option>
-                            <option value="Feature">Feature</option>
-                            <option value="Other">Other</option>
+                            <option value="">Select Issue Type</option>
+                            {issueTypes.map((issue) => (
+                                <option key={issue.id} value={issue.id}>
+                                    {issue.displayName}
+                                </option>
+                            ))}
                         </select>
                     </div>
 
@@ -66,27 +106,55 @@ export default function IssuePage() {
                             required
                         >
                             <option value="">Select Department</option>
+                            <option value="ACCOUNTS">ACCOUNTS</option>
                             <option value="IT">IT</option>
-                            <option value="Admin">Admin</option>
-                            <option value="Finance">Finance</option>
+                            <option value="ADMIN">ADMIN</option>
+                            <option value="SUPPORT">SUPPORT</option>
+                            <option value="STUDENT_AFFAIRS">STUDENT_AFFAIRS</option>
+                            <option value="EXAM_CELL">EXAM_CELL</option>
+                            <option value="LIBRARY">LIBRARY</option>
                         </select>
                     </div>
 
                     <div style={styles.formGroup}>
-                        <label style={styles.label}>Issue Category</label>
+                        <label style={styles.label}>Issue Priority</label>
                         <select
-                            name="category"
-                            value={form.category}
+                            name="priority"
+                            value={form.priority}
                             onChange={handleChange}
                             style={styles.select}
                             required
                         >
-                            <option value="">Select Category</option>
-                            <option value="Urgent">Urgent</option>
-                            <option value="High">High</option>
-                            <option value="Medium">Medium</option>
-                            <option value="Low">Low</option>
+                            <option selected value="LOW">LOW</option>
+                            <option value="MEDIUM">MEDIUM</option>
+                            <option value="HIGH">HIGH</option>
+                            <option value="CRITICAL">CRITICAL</option>
                         </select>
+                    </div>
+
+                    <div style={styles.formGroup}>
+                        <label style={styles.label}>Issue Description</label>
+                        <input
+                            type="text"
+                            name="description"
+                            value={form.description}
+                            onChange={handleChange}
+                            style={styles.input}
+                            required
+                        />
+                    </div>
+
+                    <div style={styles.formGroup}>
+                        <label style={styles.label}>Issue Attachment</label>
+                        <input
+                            type="file"
+                            multiple
+                            name="files"
+                            value={form.files}
+                            onChange={handleChange}
+                            style={styles.input}
+                            required
+                        />
                     </div>
 
                     <button type="submit" style={styles.button}>Submit Issue</button>
