@@ -10,26 +10,53 @@ import {
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Search from "../common/Search";
+import api from "../../api";
+import "../../addStudent.css"
 
 const StudentsView = () => {
 	const [students, setStudents] = useState([]);
 	const [search, setSearch] = useState("");
 
 	useEffect(() => {
+
 		loadStudents();
 	}, []);
-
 	const loadStudents = async () => {
-		const result = await axios.get(
-			"http://localhost:8080/students",
-			{
-				validateStatus: () => {
-					return true;
-				},
+		try {
+			const response = await api.get("/users/list", {
+				withCredentials: true,
+			});
+			setStudents(response.data);
+		} catch (error) {
+			console.error("Error fetching My issue types:", error);
+		}
+	};
+	console.log(students, 'students');
+
+	const toggleStatus = async (id, currentStatus) => {
+
+		try {
+			const response = await api.put(
+				`/users/${id}/status?active=${currentStatus}`,
+				{
+					withCredentials: true,
+				}
+			);
+			console.log(response, 'response');
+			if (response.status === 200) {
+				// Update UI instantly
+				setStudents(prev =>
+					prev.map(st =>
+						st.id === id ? { ...st, active_status: currentStatus } : st
+					)
+				);
+				loadStudents();
+			} else {
+				console.error("Failed to update status");
 			}
-		);
-		if (result.status === 302) {
-			setStudents(result.data);
+
+		} catch (error) {
+			console.error("Error:", error);
 		}
 	};
 
@@ -50,10 +77,12 @@ const StudentsView = () => {
 				<thead>
 					<tr className="text-center">
 						<th>ID</th>
-						<th>First Name</th>
-						<th>Last Name</th>
+						<th>Full Name</th>
+						<th>User Name</th>
+						<th>Role Number</th>
 						<th>Email</th>
-						<th>Depatment</th>
+						<th>Role</th>
+						<th>Status</th>
 						<th colSpan="3">Actions</th>
 					</tr>
 				</thead>
@@ -61,7 +90,7 @@ const StudentsView = () => {
 				<tbody className="text-center">
 					{students
 						.filter((st) =>
-							st.firstName
+							st.fullName
 								.toLowerCase()
 								.includes(search)
 						)
@@ -70,10 +99,19 @@ const StudentsView = () => {
 								<th scope="row" key={index}>
 									{index + 1}
 								</th>
-								<td>{student.firstName}</td>
-								<td>{student.lastName}</td>
+								<td>{student.fullName}</td>
+								<td>{student.username}</td>
+								<td>{student.rollNumber}</td>
 								<td>{student.email}</td>
-								<td>{student.department}</td>
+								<td>{student.role}</td>
+								<td>
+									<button
+										className={`btn btn-sm ${student.active_status ? 'btn-success' : 'btn-secondary'}`}
+										onClick={() => toggleStatus(student.id, student.active_status)}
+									>
+										{student.active_status ? 'Active' : 'De-Active'}
+									</button>
+								</td>
 								<td className="mx-2">
 									<Link
 										to={`/student-profile/${student.id}`}
@@ -96,6 +134,30 @@ const StudentsView = () => {
 										}>
 										<FaTrashAlt />
 									</button>
+								</td>
+								<td>
+									{student.userAttachments && student.userAttachments.length > 0 && (
+										<div className="avatar-wrapper">
+											{student.userAttachments.map((img, index) => {
+												const imgUrl = `data:${img.fileType};base64,${img.fileData}`;
+
+												return (
+													<div key={index} className="avatar-wrapper">
+														<img
+															src={imgUrl}
+															alt={img.fileName}
+															className="avatar-small"
+														/>
+														<img
+															src={imgUrl}
+															alt="Large Preview"
+															className="avatar-large"
+														/>
+													</div>
+												);
+											})}
+										</div>
+									)}
 								</td>
 							</tr>
 						))}

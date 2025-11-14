@@ -1,15 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./viewIssues.css";
 import { useNavigate } from "react-router-dom";
+import api from "../../api";
 
 const ViewIssues = () => {
   const navigate = useNavigate();
-  const issues = [
-    { id: 1, title: "Library Wi-Fi Not Working", description: "Wi-Fi in the main library is down since morning.", type: "My Issue", status: "Open" },
-    { id: 2, title: "Canteen Hygiene", description: "Need better cleanliness in canteen.", type: "Global Issue", status: "In Progress" },
-    { id: 3, title: "Projector Issue in Room 204", description: "Projector is not turning on.", type: "My Issue", status: "Resolved" },
-    { id: 4, title: "Parking Space Shortage", description: "Students are struggling to find parking space.", type: "Global Issue", status: "Open" }
-  ];
+  const [myIssues, setMyIssues] = useState([]);
+  useEffect(() => {
+    const fetchMyIssues = async () => {
+      try {
+        const response = await api.get("/issues/my", {
+          withCredentials: true,
+        });
+        setMyIssues(response.data);
+      } catch (error) {
+        console.error("Error fetching My issue types:", error);
+      }
+    };
+
+    fetchMyIssues();
+  }, []);
 
   return (
     <div className="view-issues-container">
@@ -34,7 +44,7 @@ const ViewIssues = () => {
               color: "#333"
             }}
           >
-            All Reported Issues
+            All My Reported Issues
           </h1>
           <button
             style={{
@@ -57,14 +67,25 @@ const ViewIssues = () => {
 
 
       <div className="issues-grid">
-        {issues.map((issue) => (
+        {myIssues.map((issue) => (
           <div className="issue-card" key={issue.id}>
             <h3>{issue.title}</h3>
             <p>{issue.description}</p>
             <div className="issue-meta">
-              <span className={`issue-type ${issue.type === "Global Issue" ? "global" : "my"}`}>
-                {issue.type}
+              <small className="text-muted">
+                Issue Type :- {issue.issueType.displayName}
+              </small>
+              <span className="text-muted">
+                Priority :- {issue.priority}
               </span>
+            </div>
+            <div className="issue-meta">
+              <small className="text-muted">
+                Reported on {new Date(issue.createdAt).toLocaleDateString("en-GB")}
+              </small>
+              <small className="text-muted">
+                Due AT {new Date(issue.dueAt).toLocaleDateString("en-GB")}
+              </small>
               <span className={`issue-status ${issue.status.toLowerCase().replace(" ", "-")}`}>
                 {issue.status}
               </span>

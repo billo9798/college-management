@@ -31,6 +31,7 @@ public class IssueDTO {
     private List<IssueCommentDTO> comments;
 
     public static IssueDTO mapToDto(Issue issue) {
+        UserDto resolvedUser = null;
         List<IssueAttachmentDTO> attachmentDTOs = (issue.getAttachments() != null && !issue.getAttachments().isEmpty())
                 ? issue.getAttachments().stream()
                 .map(IssueAttachmentDTO::mapToDto)
@@ -43,7 +44,9 @@ public class IssueDTO {
                 .toList()
                 : Collections.emptyList();
         UserDto studentValue =  UserDto.mapToDto(issue.getStudent());
-        UserDto resolvedUser = UserDto.mapToDto(issue.getResolvedBy());
+        if(issue.getResolvedBy() != null && issue.getResolvedBy().isActive_status()) {
+            resolvedUser = UserDto.mapToDto(issue.getResolvedBy());
+        }
         return new IssueDTO(
                 issue.getId(),
                 issue.getTitle(),

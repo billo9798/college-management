@@ -9,9 +9,9 @@ export default function IssuePage() {
         description: "",
         priority: "LOW",
         department: "",
-        issueType: -1,
-        files: null
+        issueType: -1
     });
+    const [idfile, setIdFile] = useState(null);
     const [issueTypes, setIssueTypes] = useState([]);
     useEffect(() => {
         const fetchIssueTypes = async () => {
@@ -46,8 +46,8 @@ export default function IssuePage() {
         formData.append("issueTypeId", form.issueType);
         formData.append("globalIssue", queryParams.get("type") === "global" ? true : false);
         formData.append("assignedToDepartment", form.department);
-        formData.append("files", form.files);
-
+        formData.append("files", idfile);
+        console.log(formData, 'form')
         try {
             await api.post("/issues/create", formData, {
                 headers: {
@@ -150,8 +150,7 @@ export default function IssuePage() {
                             type="file"
                             multiple
                             name="files"
-                            value={form.files}
-                            onChange={handleChange}
+                            onChange={(e) => setIdFile(e.target.files[0])}
                             style={styles.input}
                             required
                         />

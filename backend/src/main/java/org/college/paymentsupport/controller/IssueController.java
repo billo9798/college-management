@@ -36,7 +36,7 @@ public class IssueController {
             @RequestParam Department assignedToDepartment,
             @RequestParam(required = false) MultipartFile[] files) throws IOException {
 
-        if (currentUser.getRole() != Role.STUDENT) {
+        if (!currentUser.isActive_status()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         IssueDTO saved = issueService.createIssue(currentUser.getId(), title, description, priority, issueTypeId, assignedToDepartment, globalIssue, files);

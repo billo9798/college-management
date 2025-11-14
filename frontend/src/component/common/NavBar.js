@@ -70,7 +70,7 @@ const NavBar = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link className="dropdown-item" to="/edit-student">
+                  <Link className="dropdown-item" to="/add-issue?type=my">
                     Add Issue
                   </Link>
                 </li>
@@ -83,12 +83,12 @@ const NavBar = () => {
               </span>
               <ul className="dropdown-menu">
                 <li>
-                  <Link className="dropdown-item" to="/add-students">
+                  <Link className="dropdown-item" to="/view-students">
                     View Student
                   </Link>
                 </li>
                 <li>
-                  <Link className="dropdown-item" to="/edit-student">
+                  <Link className="dropdown-item" to="/add-students">
                     Add Student
                   </Link>
                 </li>

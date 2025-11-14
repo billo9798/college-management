@@ -50,3 +50,35 @@ label {
 body {
     background-color: #ecf0f1;
 }
+
+.avatar-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.avatar-small {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+  border: 1px solid #ccc;
+}
+
+.avatar-large {
+  position: absolute;
+  top: 0;
+  right: 55px;
+  left: auto;
+  width: 380px;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid #999;
+  display: none;
+  background: white;
+  z-index: 999;
+}
+
+.avatar-wrapper:hover .avatar-large {
+  display: block;
+}

@@ -50,3 +50,34 @@
     rgba(0, 0, 0, 0.17) 0px 12px 13px,
     rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
+
+.issue-image-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.issue-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 6px;
+  object-fit: cover;
+  cursor: pointer;
+  border: 1px solid #ccc;
+}
+
+.issue-large-preview {
+  position: absolute;
+  top: 0;
+  left: 60px;
+  width: 200px;
+  height: auto;
+  display: none;
+  border-radius: 6px;
+  border: 1px solid #888;
+  background: white;
+  z-index: 100;
+}
+
+.issue-image-wrapper:hover .issue-large-preview {
+  display: block;
+}

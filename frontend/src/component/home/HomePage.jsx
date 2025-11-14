@@ -1,20 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./HomePage.css";
 import { useNavigate } from "react-router-dom";
+import api from "../../api";
 
 const HomePage = () => {
   const [activeTab, setActiveTab] = useState("global");
   const navigate = useNavigate();
-  const myIssues = [
-    { id: 1, title: "Library AC not working", status: "Open", date: "2025-09-01" },
-    { id: 2, title: "Projector in Lab 3 broken", status: "In Progress", date: "2025-08-30" },
-  ];
+  const [myIssues, setMyIssues] = useState([]);
+  const [globalIssues, setGlobalIssues] = useState([]);
+  useEffect(() => {
+    const fetchMyIssues = async () => {
+      try {
+        const response = await api.get("/issues/my", {
+          withCredentials: true,
+        });
+        setMyIssues(response.data);
+      } catch (error) {
+        console.error("Error fetching My issue types:", error);
+      }
+    };
 
-  const globalIssues = [
-    { id: 1, title: "Water supply disruption in campus", status: "Resolved", date: "2025-08-28" },
-    { id: 2, title: "WiFi outage in Hostel Block A", status: "Open", date: "2025-09-01" },
-    { id: 3, title: "Canteen food complaints", status: "In Progress", date: "2025-08-25" },
-  ];
+    const fetchGlobalIssues = async () => {
+      try {
+        const response = await api.get("/issues/global", {
+          withCredentials: true,
+        });
+        setGlobalIssues(response.data);
+      } catch (error) {
+        console.error("Error fetching Global issue types:", error);
+      }
+    };
+
+    fetchMyIssues();
+    fetchGlobalIssues();
+  }, []);
+
+  console.log(myIssues, 'myissue')
+  console.log(globalIssues, 'globalissue')
 
   const issuesToShow = activeTab === "global" ? myIssues : globalIssues;
 
@@ -66,12 +88,38 @@ const HomePage = () => {
               <div className="card issue-card shadow-lg border-0">
                 <div className="card-body">
                   <h5 className="card-title">{issue.title}</h5>
+                  <p className="card-title">{issue.description}</p>
                   <p className="card-text">
                     <strong>Status:</strong> {issue.status}
                   </p>
                   <p className="card-text">
-                    <small className="text-muted">Reported on {issue.date}</small>
+                    <small className="text-muted">
+                      Reported on {new Date(issue.createdAt).toLocaleDateString("en-GB")}
+                    </small>
                   </p>
+
+                  {issue.attachments && issue.attachments.length > 0 && (
+                    <div className="d-flex gap-2 mb-2 flex-wrap">
+                      {issue.attachments.map((img, index) => {
+                        const imgUrl = `data:${img.fileType};base64,${img.fileData}`;
+
+                        return (
+                          <div key={index} className="issue-image-wrapper">
+                            <img
+                              src={imgUrl}
+                              alt={img.fileName}
+                              className="issue-avatar"
+                            />
+                            <img
+                              src={imgUrl}
+                              alt="Large Preview"
+                              className="issue-large-preview"
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                   <button className="btn btn-sm btn-gradient">View Details</button>
                 </div>
               </div>
