@@ -2,7 +2,6 @@ import React, {
 	useEffect,
 	useState,
 } from "react";
-import axios from "axios";
 import {
 	FaEdit,
 	FaEye,
@@ -16,11 +15,8 @@ import "../../addStudent.css"
 const StudentsView = () => {
 	const [students, setStudents] = useState([]);
 	const [search, setSearch] = useState("");
-
-	useEffect(() => {
-
-		loadStudents();
-	}, []);
+	const userRole = localStorage.getItem("role");
+	
 	const loadStudents = async () => {
 		try {
 			const response = await api.get("/users/list", {
@@ -31,7 +27,6 @@ const StudentsView = () => {
 			console.error("Error fetching My issue types:", error);
 		}
 	};
-	console.log(students, 'students');
 
 	const toggleStatus = async (id, currentStatus) => {
 
@@ -44,7 +39,6 @@ const StudentsView = () => {
 			);
 			console.log(response, 'response');
 			if (response.status === 200) {
-				// Update UI instantly
 				setStudents(prev =>
 					prev.map(st =>
 						st.id === id ? { ...st, active_status: currentStatus } : st
@@ -61,11 +55,27 @@ const StudentsView = () => {
 	};
 
 	const handleDelete = async (id) => {
-		await axios.delete(
-			`http://localhost:8080/students/delete/${id}`
-		);
-		loadStudents();
+		try {
+			const response = await api.delete(
+				`/users/delete/${id}`,
+				{
+					withCredentials: true,
+				}
+			);
+
+			if (response.status === 200) {
+				loadStudents();
+			} else {
+				console.error("Failed to update status");
+			}
+		} catch (error) {
+			console.error("Error:", error);
+		}
 	};
+
+	useEffect(() => {
+		loadStudents();
+	}, []);
 
 	return (
 		<section>
@@ -82,7 +92,9 @@ const StudentsView = () => {
 						<th>Role Number</th>
 						<th>Email</th>
 						<th>Role</th>
-						<th>Status</th>
+						{userRole === 'ADMIN' && (
+							<th>Status</th>
+						)}
 						<th colSpan="3">Actions</th>
 					</tr>
 				</thead>
@@ -104,14 +116,16 @@ const StudentsView = () => {
 								<td>{student.rollNumber}</td>
 								<td>{student.email}</td>
 								<td>{student.role}</td>
-								<td>
-									<button
-										className={`btn btn-sm ${student.active_status ? 'btn-success' : 'btn-secondary'}`}
-										onClick={() => toggleStatus(student.id, student.active_status)}
-									>
-										{student.active_status ? 'Active' : 'De-Active'}
-									</button>
-								</td>
+								{userRole === 'ADMIN' && (
+									<td>
+										<button
+											className={`btn btn-sm ${student.active_status ? 'btn-success' : 'btn-secondary'}`}
+											onClick={() => toggleStatus(student.id, student.active_status)}
+										>
+											{student.active_status ? 'Active' : 'De-Active'}
+										</button>
+									</td>
+								)}
 								<td className="mx-2">
 									<Link
 										to={`/student-profile/${student.id}`}

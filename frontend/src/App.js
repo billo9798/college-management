@@ -18,9 +18,9 @@ import { EntryPage } from "./component/common/EntryPage";
 import LoginPage from "./component/pages/Login";
 import Signup from "./component/pages/Signup";
 import IssuePage from "./component/Issues/IssuePage";
-import AddIssue from "./component/Issues/AddIssue";
 import ContactUs from "./component/common/ContactUs";
 import AboutUs from "./component/common/AboutUs";
+import ViewIssuesStatusChange from "./component/Issues/ViewIssuesStatusChange";
 
 function AppContent() {
     const location = useLocation();
@@ -42,6 +42,7 @@ function AppContent() {
                 <Route exact path="/student-profile/:id" element={<StudentPofile />} />
                 <Route exact path="/contact" element={<ContactUs />} />
                 <Route exact path="/about" element={<AboutUs />} />
+                <Route exact path="/statusChange" element={<ViewIssuesStatusChange />} />
             </Routes>
         </main>
     );

@@ -5,6 +5,8 @@ import "./NavBar.css";
 
 const NavBar = () => {
   const [scrolled, setScrolled] = useState(false);
+  const userRole = localStorage.getItem("role");
+  const userName = localStorage.getItem("userName");
   const navigate = useNavigate();
   // Detect scroll to change navbar background
   useEffect(() => {
@@ -23,6 +25,9 @@ const NavBar = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("role");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userID");
     sessionStorage.clear();
     navigate("/login");
   };
@@ -76,24 +81,32 @@ const NavBar = () => {
                 </li>
               </ul>
             </li>
-
-            <li className="nav-item dropdown custom-dropdown">
-              <span className="nav-link dropdown-toggle" role="button">
-                Student
-              </span>
-              <ul className="dropdown-menu">
-                <li>
-                  <Link className="dropdown-item" to="/view-students">
-                    View Student
+            {userRole !== 'STUDENT' ? (
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/statusChange">
+                    Issue Status
                   </Link>
                 </li>
-                <li>
-                  <Link className="dropdown-item" to="/add-students">
-                    Add Student
-                  </Link>
+                <li className="nav-item dropdown custom-dropdown">
+                  <span className="nav-link dropdown-toggle" role="button">
+                    Student
+                  </span>
+                  <ul className="dropdown-menu">
+                    <li>
+                      <Link className="dropdown-item" to="/view-students">
+                        View Student
+                      </Link>
+                    </li>
+                    <li>
+                      <Link className="dropdown-item" to="/add-students">
+                        Add Student
+                      </Link>
+                    </li>
+                  </ul>
                 </li>
-              </ul>
-            </li>
+              </>
+            ) : ''}
             <li className="nav-item">
               <Link className="nav-link" to="/contact">
                 contect us
@@ -107,6 +120,11 @@ const NavBar = () => {
             <li className="nav-item">
               <button className="nav-link btn btn-link" onClick={handleLogout}>
                 Logout
+              </button>
+            </li>
+            <li className="nav-item">
+              <button className="nav-link btn btn-link" onClick={() => navigate(`/student-profile/${localStorage.getItem("userID")}`)}>
+                {`${userName} ( ${userRole} )`}
               </button>
             </li>
           </ul>

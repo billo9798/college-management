@@ -22,6 +22,9 @@ export default function LoginPage() {
 
         if (token) {
           localStorage.setItem("token", token);
+          localStorage.setItem("role", response.data.role);
+          localStorage.setItem("userName", response.data.userName);
+          localStorage.setItem("userID", response.data.userId);
           navigate("/home");
         } else {
           setError("Invalid login response — no token found.");

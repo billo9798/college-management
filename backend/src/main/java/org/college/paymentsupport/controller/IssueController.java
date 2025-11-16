@@ -45,7 +45,7 @@ public class IssueController {
 
     @GetMapping("/{id}")
     public ResponseEntity<IssueDTO> getIssueById(@PathVariable Long id,
-                                              @AuthenticationPrincipal User currentUser) {
+                                                 @AuthenticationPrincipal User currentUser) {
         IssueDTO issue = issueService.getIssueById(id, currentUser);
         return ResponseEntity.ok(issue);
     }
@@ -81,6 +81,17 @@ public class IssueController {
         return ResponseEntity.ok(updated);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'HOD', 'STAFF')")
+    @DeleteMapping("/delete/{id}")
+    public String deleteIssue(@PathVariable Long id, @AuthenticationPrincipal User currentUser) {
+
+        if (currentUser.getRole() == Role.STUDENT) {
+            return "not valid user";
+        }
+        issueService.deleteIssue(id);
+        return "Issue deleted";
+    }
+
     // Download attachment
     @GetMapping("/attachments/{id}")
     public ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long id,
@@ -100,7 +111,7 @@ public class IssueController {
     // Filter by status
     @GetMapping("/filter")
     public ResponseEntity<List<IssueDTO>> filterByStatus(@RequestParam IssueStatus status,
-                                                      @AuthenticationPrincipal User currentUser) {
+                                                         @AuthenticationPrincipal User currentUser) {
         if (currentUser.getRole() == Role.STUDENT) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -108,7 +119,7 @@ public class IssueController {
     }
 
     @GetMapping("/global")
-    public ResponseEntity<List<IssueDTO>> filterGlobalIssue(@AuthenticationPrincipal User currentUser){
+    public ResponseEntity<List<IssueDTO>> filterGlobalIssue(@AuthenticationPrincipal User currentUser) {
         if (!currentUser.isActive_status()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }

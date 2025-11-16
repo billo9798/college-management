@@ -132,6 +132,13 @@ public class IssueService {
         return saved;
     }
 
+    public void deleteIssue(Long issueId) {
+        Issue issue = issueRepository.findById(issueId)
+                .orElseThrow(() -> new NotFoundException("Issue not found"));
+
+        issueRepository.deleteById(issueId);
+    }
+
     // Filtering helpers
     public List<IssueDTO> filterIssuesByStatus(IssueStatus status) {
         List<Issue> issues = issueRepository.findByStatus(status);

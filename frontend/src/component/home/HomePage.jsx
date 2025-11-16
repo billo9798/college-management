@@ -8,37 +8,36 @@ const HomePage = () => {
   const navigate = useNavigate();
   const [myIssues, setMyIssues] = useState([]);
   const [globalIssues, setGlobalIssues] = useState([]);
+
+
+  const fetchMyIssues = async () => {
+    try {
+      const response = await api.get("/issues/my", {
+        withCredentials: true,
+      });
+      setMyIssues(response.data);
+    } catch (error) {
+      console.error("Error fetching My issue types:", error);
+    }
+  };
+
+  const fetchGlobalIssues = async () => {
+    try {
+      const response = await api.get("/issues/global", {
+        withCredentials: true,
+      });
+      setGlobalIssues(response.data);
+    } catch (error) {
+      console.error("Error fetching Global issue types:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchMyIssues = async () => {
-      try {
-        const response = await api.get("/issues/my", {
-          withCredentials: true,
-        });
-        setMyIssues(response.data);
-      } catch (error) {
-        console.error("Error fetching My issue types:", error);
-      }
-    };
-
-    const fetchGlobalIssues = async () => {
-      try {
-        const response = await api.get("/issues/global", {
-          withCredentials: true,
-        });
-        setGlobalIssues(response.data);
-      } catch (error) {
-        console.error("Error fetching Global issue types:", error);
-      }
-    };
-
     fetchMyIssues();
     fetchGlobalIssues();
   }, []);
 
-  console.log(myIssues, 'myissue')
-  console.log(globalIssues, 'globalissue')
-
-  const issuesToShow = activeTab === "global" ? myIssues : globalIssues;
+  const issuesToShow = activeTab === "global" ? globalIssues : myIssues;
 
   return (
     <div className="home-page">
@@ -120,7 +119,7 @@ const HomePage = () => {
                       })}
                     </div>
                   )}
-                  <button className="btn btn-sm btn-gradient">View Details</button>
+                  <button className="btn btn-sm btn-gradient">{activeTab === "global" ? 'Global Issue' : 'My Issue'}</button>
                 </div>
               </div>
             </div>

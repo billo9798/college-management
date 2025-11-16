@@ -3,12 +3,14 @@ package org.college.paymentsupport.controller;
 import jakarta.validation.Valid;
 import org.college.paymentsupport.dto.UpdateUserRequest;
 import org.college.paymentsupport.dto.UserDto;
+import org.college.paymentsupport.entity.Role;
 import org.college.paymentsupport.entity.User;
 import org.college.paymentsupport.security.JwtUtils;
 import org.college.paymentsupport.service.UserService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -90,10 +92,12 @@ public class UserController {
         String role = null;
         boolean status = false;
         boolean userPasStatus = false;
+        long userId = 0;
         if(user.isPresent()) {
             role = user.get().getRole().name();
             status = user.get().isActive_status();
             userPasStatus = userService.checkPassword(user.get(), password);
+            userId = user.get().getId();
         }
         if (userPasStatus && status) {
             String token = jwtUtils.generateToken(username);
@@ -102,7 +106,8 @@ public class UserController {
                     "token", token,
                     "tokenType", "Bearer",
                     "role", role,
-                    "status", status
+                    "status", status,
+                    "userId", userId
             ));
         } else {
             return ResponseEntity.status(401).body("Invalid credentials");
@@ -130,6 +135,17 @@ public class UserController {
     public ResponseEntity<List<UserDto>> listAllUsers() {
         List<UserDto> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'HOD', 'STAFF')")
+    @DeleteMapping("/delete/{id}")
+    public String deleteUser(@PathVariable Long id, @AuthenticationPrincipal User currentUser) {
+
+        if (currentUser.getRole() == Role.STUDENT) {
+            return "not valid user";
+        }
+        userService.deleteUser(id);
+        return "User deleted";
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'HOD')")

@@ -132,24 +132,24 @@ public class UserService {
         return userRepository.findAll()
                 .stream()
                 .map(user ->
-                new UserDto(
-                            user.getId(),
-                            user.getUsername(),
-                            user.getEmail(),
-                            user.getRole().name(),
-                            user.getFullName(),
-                            user.getRollNumber(),
-                            user.isActive_status(),
-                            user.getUser_attachments().stream()
-                                    .map(
-                                            arr -> new UserAttachmentDTO(
-                                                    arr.getId(),
-                                                    arr.getFileName(),
-                                                    arr.getFileType(),
-                                                    arr.getFileData()
-                                            ))
-                                    .toList()
-                    )
+                        new UserDto(
+                                user.getId(),
+                                user.getUsername(),
+                                user.getEmail(),
+                                user.getRole().name(),
+                                user.getFullName(),
+                                user.getRollNumber(),
+                                user.isActive_status(),
+                                user.getUser_attachments().stream()
+                                        .map(
+                                                arr -> new UserAttachmentDTO(
+                                                        arr.getId(),
+                                                        arr.getFileName(),
+                                                        arr.getFileType(),
+                                                        arr.getFileData()
+                                                ))
+                                        .toList()
+                        )
                 )
                 .collect(Collectors.toList());
     }
@@ -172,5 +172,11 @@ public class UserService {
         boolean status = !activeStatus;
         user.setActive_status(status);
         return userRepository.save(user);
+    }
+
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        userRepository.deleteById(userId);
     }
 }

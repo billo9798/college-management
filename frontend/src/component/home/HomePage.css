@@ -67,15 +67,17 @@
 
 .issue-large-preview {
   position: absolute;
-  top: 0;
-  left: 60px;
-  width: 200px;
+  bottom: 60px;
+  left: 100%;
+  transform: translateX(-50%);
+  width: 500px;
   height: auto;
   display: none;
   border-radius: 6px;
   border: 1px solid #888;
   background: white;
-  z-index: 100;
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
 }
 
 .issue-image-wrapper:hover .issue-large-preview {

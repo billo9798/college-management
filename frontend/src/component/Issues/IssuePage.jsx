@@ -11,7 +11,7 @@ export default function IssuePage() {
         department: "",
         issueType: -1
     });
-    const [idfile, setIdFile] = useState(null);
+    const [images, setImages] = useState([]);
     const [issueTypes, setIssueTypes] = useState([]);
     useEffect(() => {
         const fetchIssueTypes = async () => {
@@ -36,6 +36,19 @@ export default function IssuePage() {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
+    const handleAddImages = (e) => {
+        const selected = Array.from(e.target.files);
+
+        // Prevent selecting more than 5 total
+        if (images.length + selected.length > 5) {
+            alert("Maximum 5 images allowed");
+            return;
+        }
+
+        setImages(prev => [...prev, ...selected]);
+    };
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(form, 'form')
@@ -46,8 +59,11 @@ export default function IssuePage() {
         formData.append("issueTypeId", form.issueType);
         formData.append("globalIssue", queryParams.get("type") === "global" ? true : false);
         formData.append("assignedToDepartment", form.department);
-        formData.append("files", idfile);
-        console.log(formData, 'form')
+
+        images.forEach(file => {
+            formData.append("files", file);
+        });
+        
         try {
             await api.post("/issues/create", formData, {
                 headers: {
@@ -146,15 +162,55 @@ export default function IssuePage() {
 
                     <div style={styles.formGroup}>
                         <label style={styles.label}>Issue Attachment</label>
-                        <input
-                            type="file"
-                            multiple
-                            name="files"
-                            onChange={(e) => setIdFile(e.target.files[0])}
-                            style={styles.input}
-                            required
-                        />
+
+                        {/* File Input */}
+                        {images.length < 5 && (
+                            <input
+                                type="file"
+                                multiple
+                                accept="image/*"
+                                onChange={handleAddImages}
+                                style={styles.input}
+                            />
+                        )}
+
+                        {/* Previews */}
+                        <div style={{ display: "flex", gap: "10px", marginTop: "10px", flexWrap: "wrap" }}>
+                            {images.map((file, index) => (
+                                <div key={index} style={{ position: "relative" }}>
+                                    <img
+                                        src={URL.createObjectURL(file)}
+                                        alt=""
+                                        width={90}
+                                        height={90}
+                                        style={{ objectFit: "cover", borderRadius: 4 }}
+                                    />
+
+                                    {/* Delete button */}
+                                    <button
+                                        style={{
+                                            position: "absolute",
+                                            right: -5,
+                                            top: -5,
+                                            background: "red",
+                                            color: "white",
+                                            border: "none",
+                                            borderRadius: "50%",
+                                            width: 20,
+                                            height: 20,
+                                            cursor: "pointer"
+                                        }}
+                                        onClick={() => {
+                                            setImages(prev => prev.filter((_, i) => i !== index));
+                                        }}
+                                    >
+                                        ×
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
                     </div>
+
 
                     <button type="submit" style={styles.button}>Submit Issue</button>
                 </form>
