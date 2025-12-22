@@ -34,12 +34,15 @@ public class IssueController {
             @RequestParam Long issueTypeId,
             @RequestParam Boolean globalIssue,
             @RequestParam Department assignedToDepartment,
+            @RequestParam Double amount,
+            @RequestParam Long transactionId,
+            @RequestParam String transactionType,
             @RequestParam(required = false) MultipartFile[] files) throws IOException {
 
         if (!currentUser.isActive_status()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        IssueDTO saved = issueService.createIssue(currentUser.getId(), title, description, priority, issueTypeId, assignedToDepartment, globalIssue, files);
+        IssueDTO saved = issueService.createIssue(currentUser.getId(), title, description, priority, issueTypeId, assignedToDepartment, globalIssue, amount, transactionId, transactionType, files);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 

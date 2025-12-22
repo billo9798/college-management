@@ -8,9 +8,13 @@ export default function IssuePage() {
         title: "",
         description: "",
         priority: "LOW",
+        amount: "",
+        transactionId: "",
+        transactionType: "",
         department: "",
         issueType: -1
     });
+    console.log(form, 'form')
     const [images, setImages] = useState([]);
     const [issueTypes, setIssueTypes] = useState([]);
     useEffect(() => {
@@ -57,13 +61,16 @@ export default function IssuePage() {
         formData.append("description", form.description);
         formData.append("priority", form.priority);
         formData.append("issueTypeId", form.issueType);
+        formData.append("amount", form.amount);
+        formData.append("transactionId", form.transactionId);
+        formData.append("transactionType", form.transactionType);
         formData.append("globalIssue", queryParams.get("type") === "global" ? true : false);
         formData.append("assignedToDepartment", form.department);
 
         images.forEach(file => {
             formData.append("files", file);
         });
-        
+
         try {
             await api.post("/issues/create", formData, {
                 headers: {
@@ -131,7 +138,43 @@ export default function IssuePage() {
                             <option value="LIBRARY">LIBRARY</option>
                         </select>
                     </div>
-
+                    {form.issueType === "6" && (
+                        <>
+                            <div style={styles.formGroup}>
+                                <label style={styles.label}>Total Amount</label>
+                                <input
+                                    placeholder="Enter Total Amount e.g. 712.85"
+                                    type="number"
+                                    name="amount"
+                                    value={form.amount}
+                                    onChange={handleChange}
+                                    style={styles.input}
+                                     />
+                            </div>
+                            <div style={styles.formGroup}>
+                                <label style={styles.label}>Transaction ID</label>
+                                <input
+                                    placeholder="Enter Transaction Id e.g. 1000234567890"
+                                    type="number"
+                                    name="transactionId"
+                                    value={form.transactionId}
+                                    onChange={handleChange}
+                                    style={styles.input}
+                                     />
+                            </div>
+                            <div style={styles.formGroup}>
+                                <label style={styles.label}>Transaction Type</label>
+                                <input
+                                    placeholder="Enter Transaction Type e.g. UPI, DEBIT CARD"
+                                    type="text"
+                                    name="transactionType"
+                                    value={form.transactionType}
+                                    onChange={handleChange}
+                                    style={styles.input}
+                                     />
+                            </div>
+                        </>
+                    )}
                     <div style={styles.formGroup}>
                         <label style={styles.label}>Issue Priority</label>
                         <select

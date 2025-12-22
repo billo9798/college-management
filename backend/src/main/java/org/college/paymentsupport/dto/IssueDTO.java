@@ -27,6 +27,10 @@ public class IssueDTO {
     private UserDto student;
     private UserDto resolvedBy;
 
+    private Double amount;
+    private Long transactionId;
+    private String transactionType;
+
     private List<IssueAttachmentDTO> attachments;
     private List<IssueCommentDTO> comments;
 
@@ -61,6 +65,9 @@ public class IssueDTO {
                 issue.isGlobalIssue(),
                 studentValue,
                 resolvedUser,
+                issue.getAmount(),
+                issue.getTransactionId(),
+                issue.getTransactionType(),
                 attachmentDTOs,
                 commentDTOs
         );

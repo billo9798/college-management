@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./viewIssues.css";
 import api from "../../api";
+import { Link } from "react-router-dom";
 
 const ViewIssuesStatusChange = () => {
   const [myIssues, setMyIssues] = useState([]);
@@ -161,6 +162,11 @@ const ViewIssuesStatusChange = () => {
               >
                 delete
               </button>
+              <Link
+                to={`/issue-view/${issue.id}`}
+                className="btn btn-outline-success">
+                View Issue
+              </Link>
             </div>
           </div>
         ))}

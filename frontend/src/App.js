@@ -21,6 +21,8 @@ import IssuePage from "./component/Issues/IssuePage";
 import ContactUs from "./component/common/ContactUs";
 import AboutUs from "./component/common/AboutUs";
 import ViewIssuesStatusChange from "./component/Issues/ViewIssuesStatusChange";
+import UpdateStudentAccount from "./component/student/UpdateStudentAccount";
+import IssueView from "./component/Issues/issueView";
 
 function AppContent() {
     const location = useLocation();
@@ -39,7 +41,9 @@ function AppContent() {
                 <Route exact path="/view-students" element={<StudentsView />} />
                 <Route exact path="/add-students" element={<AddStudent />} />
                 <Route exact path="/edit-student/:id" element={<EditStudent />} />
+                <Route exact path="/update-account/:id" element={<UpdateStudentAccount />} />
                 <Route exact path="/student-profile/:id" element={<StudentPofile />} />
+                <Route exact path="/issue-view/:id" element={<IssueView />} />
                 <Route exact path="/contact" element={<ContactUs />} />
                 <Route exact path="/about" element={<AboutUs />} />
                 <Route exact path="/statusChange" element={<ViewIssuesStatusChange />} />

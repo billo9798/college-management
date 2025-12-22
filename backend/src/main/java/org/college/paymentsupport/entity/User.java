@@ -66,6 +66,11 @@ public class User implements UserDetails {
     @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
     private boolean active_status = false;
 
+    private String accountNumber;
+    private String ifscCode;
+    private String bankName;
+    private String branchName;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<UserAttachment> user_attachments;
 

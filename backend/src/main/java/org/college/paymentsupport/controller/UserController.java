@@ -56,6 +56,27 @@ public class UserController {
         }
     }
 
+    @PostMapping(value ="/update")
+    public ResponseEntity<String> updateUser(
+            @RequestParam Long userId,
+            @RequestParam String accountNumber,
+            @RequestParam String ifscCode,
+            @RequestParam String bankName,
+            @RequestParam String branchName
+    ) {
+        try {
+            User saved = userService.updateUserAccountDetails(
+                    userId,
+                    accountNumber,
+                    ifscCode,
+                    bankName,
+                    branchName
+            );
+            return ResponseEntity.ok("user De successfully " + saved.toString());
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
     @PostMapping("/create-user")
     public ResponseEntity<String> createUser(

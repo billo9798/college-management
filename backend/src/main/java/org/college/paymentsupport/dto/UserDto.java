@@ -17,16 +17,24 @@ public class UserDto {
     private String fullName;
     private Long rollNumber;
     private boolean active_status;
+    private String accountNumber;
+    private String ifscCode;
+    private String bankName;
+    private String branchName;
     private List<UserAttachmentDTO> userAttachments;
 
     public UserDto(
-        Long id,
-        String username,
-        @NotBlank @Email @Size(max = 120) String email,
-        String role,
-        @NotBlank @Size(min = 3, max = 50) String fullName,
-        Long rollNumber,
-        boolean activeStatus
+            Long id,
+            String username,
+            @NotBlank @Email @Size(max = 120) String email,
+            String role,
+            @NotBlank @Size(min = 3, max = 50) String fullName,
+            Long rollNumber,
+            String accountNumber,
+            String ifscCode,
+            String bankName,
+            String branchName,
+            boolean activeStatus
     ) {
         this.id = id;
         this.username = username;
@@ -34,6 +42,10 @@ public class UserDto {
         this.role = role;
         this.fullName = fullName;
         this.rollNumber = rollNumber;
+        this.accountNumber = accountNumber;
+        this.ifscCode = ifscCode;
+        this.bankName = bankName;
+        this.branchName = branchName;
         this.active_status = activeStatus;
     }
 
@@ -44,6 +56,10 @@ public class UserDto {
             String role,
             String fullName,
             Long rollNumber,
+            String accountNumber,
+            String ifscCode,
+            String bankName,
+            String branchName,
             boolean activeStatus,
             List<UserAttachmentDTO> userAttachments
     ) {
@@ -53,6 +69,10 @@ public class UserDto {
         this.role = role;
         this.fullName = fullName;
         this.rollNumber = rollNumber;
+        this.accountNumber = accountNumber;
+        this.ifscCode = ifscCode;
+        this.bankName = bankName;
+        this.branchName = branchName;
         this.active_status = activeStatus;
         this.userAttachments = userAttachments;
     }
@@ -65,6 +85,10 @@ public class UserDto {
                 user.getRole().name(),
                 user.getFullName(),
                 user.getRollNumber(),
+                user.getAccountNumber(),
+                user.getIfscCode(),
+                user.getBankName(),
+                user.getBranchName(),
                 user.isActive_status());
     }
 }

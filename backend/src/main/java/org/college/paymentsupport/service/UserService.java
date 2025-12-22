@@ -139,6 +139,10 @@ public class UserService {
                                 user.getRole().name(),
                                 user.getFullName(),
                                 user.getRollNumber(),
+                                user.getAccountNumber(),
+                                user.getIfscCode(),
+                                user.getBankName(),
+                                user.getBranchName(),
                                 user.isActive_status(),
                                 user.getUser_attachments().stream()
                                         .map(
@@ -171,6 +175,21 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         boolean status = !activeStatus;
         user.setActive_status(status);
+        return userRepository.save(user);
+    }
+
+    public User updateUserAccountDetails(
+            Long userId,
+            String accountNumber,
+            String ifscCode,
+            String bankName,
+            String branchName) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setAccountNumber(accountNumber);
+        user.setIfscCode(ifscCode);
+        user.setBankName(bankName);
+        user.setBranchName(branchName);
         return userRepository.save(user);
     }
 

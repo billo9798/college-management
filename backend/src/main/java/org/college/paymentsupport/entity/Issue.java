@@ -69,4 +69,8 @@ public class Issue {
     public void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
+    private Double amount;
+    private Long transactionId;
+    private String transactionType;
 }

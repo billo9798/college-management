@@ -39,7 +39,9 @@ public class IssueService {
 
     // Create issue with attachments
     public IssueDTO createIssue(Long studentId, String title, String description,
-                                IssuePriority priority, Long issueTypeId, Department assignedToDepartment, Boolean globalIssue, MultipartFile[] files) throws IOException {
+                                IssuePriority priority, Long issueTypeId, Department assignedToDepartment, Boolean globalIssue,
+                                Double amount, Long transactionId, String transactionType,
+                                MultipartFile[] files) throws IOException {
 
         User student = userRepository.findById(studentId)
                 .orElseThrow(() -> new NotFoundException("Student not found"));
@@ -59,6 +61,9 @@ public class IssueService {
         issue.setDueAt(addWorkingDays(LocalDateTime.now(), 20));
         issue.setStatus(IssueStatus.OPEN);
         issue.setGlobalIssue(globalIssue);
+        issue.setAmount(amount);
+        issue.setTransactionId(transactionId);
+        issue.setTransactionType(transactionType);
 
         List<IssueAttachment> attachments = new ArrayList<>();
         if (files != null) {

@@ -10,26 +10,23 @@ import {
 } from "react-router-dom";
 import api from "../../api";
 
-const EditStudent = () => {
+const UpdateStudentAccount = () => {
 	let navigate = useNavigate();
 
 	const { id } = useParams();
 
 	const [student, setStudent] = useState({
-		fullName: "",
-		username: "",
-		rollNumber: -1,
-		email: "",
-		role: "",
-		active_status: false,
+		accountNumber: 0,
+		ifscCode: "",
+		bankName: "",
+		branchName: ""
 	});
 
 	const {
-		fullName,
-		username,
-		rollNumber,
-		email,
-		role,
+		accountNumber,
+		ifscCode,
+		bankName,
+		branchName,
 	} = student;
 
 	const loadStudent = async () => {
@@ -55,31 +52,43 @@ const EditStudent = () => {
 		});
 	};
 	const updateStudent = async (e) => {
-		// e.preventDefault();
-		// await axios.put(
-		// 	`http://localhost:8080/students/update/${id}`,
-		// 	student
-		// );
-		navigate("/view-students");
+		e.preventDefault();
+		const formData = new FormData();
+		formData.append("userId", student.id);
+		formData.append("accountNumber", student.accountNumber);
+		formData.append("ifscCode", student.ifscCode);
+		formData.append("bankName", student.bankName);
+		formData.append("branchName", student.branchName);
+
+		try {
+			await api.post("/users/update", formData, {
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+			});
+			navigate(`/student-profile/${localStorage.getItem("userID")}`);
+		} catch (err) {
+			console.log("Signup failed. " + err.response.data + " Try again.");
+		}
 	};
 
 	return (
 		<div className="col-sm-8 py-2 px-5 offset-2 shadow">
-			<h2 className="mt-5"> Edit Student</h2>
+			<h2 className="mt-5"> Add/Update Student Account Details</h2>
 			<form onSubmit={(e) => updateStudent(e)}>
 				<div className="input-group mb-5">
 					<label
 						className="input-group-text"
 						htmlFor="fristName">
-						Full Name
+						Account Number
 					</label>
 					<input
 						className="form-control col-sm-6"
-						type="text"
-						name="fullName"
-						id="fullName"
+						type="number"
+						name="accountNumber"
+						id="accountNumber"
 						required
-						value={fullName}
+						value={accountNumber}
 						onChange={(e) => handleInputChange(e)}
 					/>
 				</div>
@@ -88,15 +97,15 @@ const EditStudent = () => {
 					<label
 						className="input-group-text"
 						htmlFor="lastName">
-						User Name
+						IFSC Code
 					</label>
 					<input
 						className="form-control col-sm-6"
 						type="text"
-						name="username"
-						id="username"
-						readOnly
-						value={username}
+						name="ifscCode"
+						id="ifscCode"
+						required
+						value={ifscCode}
 						onChange={(e) => handleInputChange(e)}
 					/>
 				</div>
@@ -105,15 +114,15 @@ const EditStudent = () => {
 					<label
 						className="input-group-text"
 						htmlFor="lastName">
-						Roll Number
+						Bank Name
 					</label>
 					<input
 						className="form-control col-sm-6"
 						type="text"
-						name="rollNumber"
-						id="rollNumber"
+						name="bankName"
+						id="bankName"
 						required
-						value={rollNumber}
+						value={bankName}
 						onChange={(e) => handleInputChange(e)}
 					/>
 				</div>
@@ -122,32 +131,15 @@ const EditStudent = () => {
 					<label
 						className="input-group-text"
 						htmlFor="email">
-						Your Email
-					</label>
-					<input
-						className="form-control col-sm-6"
-						type="email"
-						name="email"
-						id="email"
-						required
-						value={email}
-						onChange={(e) => handleInputChange(e)}
-					/>
-				</div>
-
-				<div className="input-group mb-5">
-					<label
-						className="input-group-text"
-						htmlFor="department">
-						Role
+						Branch Name
 					</label>
 					<input
 						className="form-control col-sm-6"
 						type="text"
-						name="role"
-						id="role"
-						readOnly
-						value={role}
+						name="branchName"
+						id="branchName"
+						required
+						value={branchName}
 						onChange={(e) => handleInputChange(e)}
 					/>
 				</div>
@@ -163,7 +155,7 @@ const EditStudent = () => {
 
 					<div className="col-sm-2">
 						<Link
-							to={"/home"}
+							to={`/student-profile/${localStorage.getItem("userID")}`}
 							type="submit"
 							className="btn btn-outline-warning btn-lg">
 							Cancel
@@ -175,4 +167,4 @@ const EditStudent = () => {
 	);
 };
 
-export default EditStudent;
+export default UpdateStudentAccount;

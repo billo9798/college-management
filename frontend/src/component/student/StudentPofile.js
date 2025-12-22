@@ -63,6 +63,13 @@ const StudentPofile = () => {
 										{`${student.active_status ? 'Active' : 'De-Active'}`}
 									</button>
 								</div>
+								<div className="d-flex justify-content-center mb-2">
+									<Link
+										to={`/update-account/${student.id}`}
+										className="btn btn-outline-success">
+										Account
+									</Link>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -121,7 +128,7 @@ const StudentPofile = () => {
 								<div className="row">
 									<div className="col-sm-3">
 										<h5 className="mb-0">
-											user Name
+											User Name
 										</h5>
 									</div>
 
@@ -134,28 +141,16 @@ const StudentPofile = () => {
 									<div className="col-sm-5 mt-3">
 										{userRole !== 'STUDENT' ? (
 											<Link
-												to={"/view-students"}
+												to={"/home"}
 												type="submit"
 												className="btn btn-outline-warning btn-lg">
 												Cancel
 											</Link>
-										): ''}
+										) : ''}
 									</div>
-
-
-
-
 								</div>
-
-
 							</div>
-
 						</div>
-
-
-
-
-
 					</div>
 				</div>
 			</div>
